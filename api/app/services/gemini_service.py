@@ -61,16 +61,23 @@ class GeminiService:
                     return await asyncio.to_thread(fn, *args, **kwargs)
                 except APIError as e:
                     logger.warning(f"Gemini API error (attempt {attempt + 1}/{max_retries + 1}): {e}")
-                    # Check for rate limit / quota
+                    # Check for rate limit / quota / temporary server demand
                     err_str = str(e).lower()
-                    if "429" in err_str or "quota" in err_str or "resource_exhausted" in err_str:
+                    if (
+                        "429" in err_str
+                        or "quota" in err_str
+                        or "resource_exhausted" in err_str
+                        or "503" in err_str
+                        or "unavailable" in err_str
+                        or "high demand" in err_str
+                    ):
                         if attempt < max_retries:
                             # Exponential backoff with jitter: 2s, 4s, 8s +/- jitter
                             delay = (base_delay * (2 ** attempt)) + random.uniform(0.3, 1.2)
-                            logger.info(f"Rate limited by Gemini. Backing off for {delay:.2f}s...")
+                            logger.info(f"Gemini server busy or rate limited ({e}). Backing off for {delay:.2f}s...")
                             await asyncio.sleep(delay)
                             continue
-                        raise QuotaExceededException("Gemini quota rate limit reached.") from e
+                        raise QuotaExceededException("Gemini quota or service demand limit reached.") from e
                     raise
                 except Exception as e:
                     logger.error(f"Unexpected error calling Gemini: {e}")

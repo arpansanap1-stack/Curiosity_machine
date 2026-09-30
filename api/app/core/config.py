@@ -19,7 +19,7 @@ class Settings(BaseSettings):
 
     # Gemini API settings
     gemini_api_key: str = ""
-    gemini_model: str = "gemini-2.5-flash"
+    gemini_model: str = "gemini-3.1-flash-lite"
 
     # Database
     database_url: str = "sqlite+aiosqlite:///./curiosity.db"

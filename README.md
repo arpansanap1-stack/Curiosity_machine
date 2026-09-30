@@ -72,7 +72,7 @@ Edit `.env` to configure your free Google AI Studio key:
 ```env
 # Optional: If left blank or quota exhausted, app gracefully runs in Degraded Wikipedia Mode
 GEMINI_API_KEY=your_gemini_api_key_here
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-3.1-flash-lite
 DATABASE_URL=sqlite+aiosqlite:///./curiosity.db
 HOST=127.0.0.1
 PORT=8000
