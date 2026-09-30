@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --theme-name: 'observatory';
+    --bg-base: #07080d;
+    --bg-gradient: radial-gradient(circle at 50% 50%, #0b0d14 0%, #07080d 100%);
+    --surface: #10131c;
+    --surface-elevated: #161a26;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 255, 255, 0.18);
+    --text-primary: #e8eaf2;
+    --text-muted: #8a90a5;
+    --accent: #7c8cff;
+    --accent-glow: rgba(124, 140, 255, 0.25);
+    --success: #4ade9a;
+    --warning: #f5b84b;
+
+    /* Domains */
+    --domain-science: #5bc0ff;
+    --domain-nature: #56d39b;
+    --domain-history: #f2b45c;
+    --domain-art: #f472b6;
+    --domain-tech: #8b8cff;
+    --domain-math: #22d3ee;
+    --domain-philosophy: #c084fc;
+    --domain-society: #fb7c5c;
+    --domain-other: #9aa3b8;
+
+    /* Canvas tokens */
+    --starfield-opacity: 0.85;
+    --nebula-opacity: 0.45;
+  }
+
+  [data-theme='atlas'] {
+    --theme-name: 'atlas';
+    --bg-base: #f6f1e7;
+    --bg-gradient: radial-gradient(circle at 50% 50%, #fbf8f2 0%, #f6f1e7 100%);
+    --surface: #ede7dc;
+    --surface-elevated: #e5ded0;
+    --border: rgba(31, 36, 48, 0.12);
+    --border-hover: rgba(31, 36, 48, 0.25);
+    --text-primary: #1f2430;
+    --text-muted: #6b6f7a;
+    --accent: #4f63c8;
+    --accent-glow: rgba(79, 99, 200, 0.18);
+    --success: #2e8b57;
+    --warning: #d97706;
+
+    /* Domains desaturated 20% */
+    --domain-science: #499acc;
+    --domain-nature: #46aa7d;
+    --domain-history: #c99347;
+    --domain-art: #c95c95;
+    --domain-tech: #6e6fcc;
+    --domain-math: #1ba9be;
+    --domain-philosophy: #9c6acc;
+    --domain-society: #ca6248;
+    --domain-other: #7c8394;
+
+    /* Canvas tokens */
+    --starfield-opacity: 0.15;
+    --nebula-opacity: 0.25;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-base);
+  background-image: var(--bg-gradient);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  overflow: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Glassmorphism utility for floating panels */
+.glass-panel {
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.4);
+}
+
+.glass-panel-elevated {
+  background: color-mix(in srgb, var(--surface-elevated) 88%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-hover);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-hover);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
