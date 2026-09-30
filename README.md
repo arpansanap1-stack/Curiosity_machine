@@ -1,156 +1,299 @@
 # Curiosity Machine 🌌
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![React 19](https://img.shields.io/badge/Frontend-React%2019-61DAFB.svg?logo=react&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/Language-TypeScript-3178C6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB.svg?logo=python&logoColor=white)](https://python.org)
+[![Google Gemini API](https://img.shields.io/badge/AI-Google%20Gemini%203-4285F4.svg?logo=google&logoColor=white)](https://ai.google.dev)
+[![Tailwind CSS v4](https://img.shields.io/badge/Styling-Tailwind%20v4-38B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![SQLite WAL](https://img.shields.io/badge/Storage-SQLite%20WAL-003B57.svg?logo=sqlite&logoColor=white)](https://sqlite.org)
+
 > **An AI-powered knowledge exploration platform that turns any topic into a living, interactive knowledge universe.**
 
-Curiosity Machine transforms linear text search into a visual, interconnected cosmos of ideas. Users enter any concept they are curious about (e.g., *"octopus intelligence"*, *"quantum entanglement"*, *"why is the sky blue"*), and watch a universe of stars, nebulae, and filaments unfold before their eyes.
+Curiosity Machine transforms linear text search into a visual, interconnected cosmos of ideas. Users enter any concept they are curious about (e.g., *"octopus intelligence"*, *"quantum entanglement"*, *"why is the sky blue"*), and watch an explorable universe of stars, nebulae, and filaments unfold before their eyes.
 
-Explore deeply, discover surprising rabbit holes, trace conceptual bridges between seemingly unrelated worlds, and build a persistent personal curiosity map.
+Explore deeply, drop into surprising rabbit holes with warp travel, trace conceptual bridges across disciplines, and build a persistent personal curiosity map.
 
 ---
 
-## ✨ Features
+## 🌟 Visual Metaphor: "The Observatory"
 
-1. **Topic → Universe**: Deconstructs any topic into 6–8 rich, related concepts categorized into distinct knowledge domains (Science, Nature, History, Art, Tech, Math, Philosophy, Society) with typed, explained connections.
-2. **The Observatory Metaphor**:
-   - **Concepts as Stars**: Star size indicates exploration depth; recency dictates brilliance; unexplored stars emit pulsing signal rings (fog of war).
-   - **Domains as Nebulae**: Soft blurred color clouds group related concepts into natural knowledge clusters.
-   - **Connections as Threads of Light**: Bézier lines with domain gradient styling encode relational meanings (*causes*, *part of*, *analogous to*, *contrasts with*, *inspired*, *origin of*, *applies to*).
-   - **Comet Trail**: Chronological filmstrip tracks your journey and replays it across the sky.
-   - **Semantic Zoom**: Zoom out to see overarching galaxy domains; zoom in to reveal star-level detail cards and summaries.
-3. **Depth Lens (4 Levels of Understanding)**:
-   - **Simple**: Intuitive, vivid explanations.
-   - **Student**: Core foundations and structural mechanics.
-   - **Undergrad**: Technical nuance, mathematical and scientific rigor.
-   - **Expert**: Frontiers, open problems, and paradoxes.
-4. **Rabbit Hole Discovery**:
-   - AI identifies distant-yet-genuinely-connected concepts maximizing *relevance × unexpectedness*.
-   - Features a **Surprise Meter** and one-line teaser.
-   - **Warp Travel**: Seamless camera acceleration easing towards your destination star.
-5. **Bridge Finder**: Pick any two distant concepts (e.g., *"Mycelium Networks"* and *"Internet Routing"*); the AI discovers a factually grounded 3–5 hop narrative bridge.
-6. **Wikipedia Grounding & Fallback**:
-   - Auto-verifies concepts against the free Wikipedia REST/OpenSearch API, awarding verified status and linking encyclopedic sources.
-   - **Degraded Mode**: If Gemini API quota is depleted or absent, the platform automatically switches to Wikipedia link extraction, remaining 100% operational.
-7. **Personal Curiosity Map**:
-   - Filter concepts by domain, search within charted knowledge, filter starred concepts, and record personal notes.
-   - Persisted both on the server (keyed by anonymous device ID) and client-side (IndexedDB for instant offline access).
-8. **Curiosity Profile (Spotify-Wrapped Style)**:
-   - Generates an SVG radar chart of domain distribution, computes your explorer archetype (e.g. *Wide Wanderer*, *Abyssal Diver*, *Constellation Weaver*), highlights blind spots, and exports a high-resolution PNG share card.
-9. **Two Visual Themes**:
-   - **Observatory (Dark)**: Deep space palette with radial atmosphere, glowing filaments, and cosmic nebulae.
-   - **Atlas (Light)**: Cartographic warm parchment, ink filaments, and desaturated hues.
-10. **Command Palette & Accessibility**:
-    - `Cmd/Ctrl+K` command palette for keyboard-first navigation.
-    - Full screen-reader friendly **Accessible List View** (`List` button or `Cmd+K`).
-    - Standard keyboard shortcuts (`E` expand, `R` rabbit hole, `B` bridge, `[` `]` trail, `F` fit view).
+Curiosity Machine rejects plain node-link graphs and generic text cards in favor of a cosmic charting observatory:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│ Top Bar: Brand · Breadcrumb Trail · Cmd+K Search · Theme · Profile Card │
+├───────────┬────────────────────────────────────────────┬───────────────┤
+│ Left Rail │                                            │ Inspector     │
+│ (Icons):  │              INFINITE CANVAS               │ (Collapsible) │
+│ Explore   │         (Stars, Nebulae, Filaments)        │ Tabs:         │
+│ Map View  │                                            │ 🔍 Explain    │
+│ Rabbit 🕳 │                         ┌────────────┐     │ 🔗 Connect    │
+│ Bridge 🌉 │                         │  Minimap   │     │ 📚 Sources    │
+│ Profile 📊│                         └────────────┘     │ 📝 Notes      │
+├───────────┴────────────────────────────────────────────┴───────────────┤
+│ Trail Strip: Filmstrip of visited stars, click to jump/replay camera   │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+- **Concepts as Stars**: Star size represents exploration depth; luminosity reflects recency; unexplored neighbors emit gentle, pulsing signal rings (the *fog of war*).
+- **Domains as Nebulae**: Soft blurred color clouds group related concepts into natural knowledge clusters (*Science*, *Nature*, *History*, *Art*, *Tech*, *Math*, *Philosophy*, *Society*).
+- **Connections as Threads of Light**: Bézier lines with domain gradient styling encode relational semantics (*causes*, *part of*, *analogous to*, *contrasts with*, *inspired*, *origin of*, *applies to*). Animated particle flows highlight energetic transitions.
+- **Comet Trail**: A luminous filmstrip tracks your journey chronologically and replays your path across the sky.
+- **Semantic Zoom**:
+  - *Galaxy Level (Zoomed Out)*: Macro domain nebulae with cluster labels and boundary hulls.
+  - *Constellation Level (Mid Zoom)*: Stars, relationship lines, and concise labels.
+  - *Star Level (Zoomed In)*: High-detail focal card with domain chips, depth badges, and summary briefs.
+- **Dual Aesthetic Themes**:
+  - **Observatory (Dark)**: Deep cosmic void with radial atmosphere, neon filament trails, and glowing starfields.
+  - **Atlas (Light)**: Cartographic warm parchment, vintage ink lines, and desaturated natural hues.
+
+---
+
+## 🏗 Architecture & System Design
+
+```mermaid
+flowchart TD
+    subgraph Frontend["Frontend (React 19 + TypeScript + Vite)"]
+        UI["Canvas UI & Panels"]
+        Store["Zustand Store (useCuriosityStore)"]
+        Canvas["HTML5 60fps Cosmos Canvas"]
+        IDB["IndexedDB Offline Backup (idb-keyval)"]
+        UI <--> Store
+        Store <--> Canvas
+        Store <--> IDB
+    end
+
+    subgraph Backend["Backend (FastAPI + Python 3.11+)"]
+        API["FastAPI REST & SSE Router"]
+        Limiter["SlowAPI Rate Limiter"]
+        Queue["Gemini Concurrency Queue & Backoff"]
+        Cache["Deterministic SHA-256 SQLite Cache"]
+        DB[(SQLite Database - WAL Mode)]
+        
+        API --> Limiter
+        Limiter --> Queue
+        Queue --> Cache
+        Cache <--> DB
+    end
+
+    subgraph External["Knowledge & Model Providers"]
+        Gemini["Google Gemini API (gemini-3.1-flash-lite / 3.8-flash)"]
+        Wiki["Wikipedia REST & OpenSearch API"]
+    end
+
+    Store <-->|HTTP / SSE Stream| API
+    Queue -->|One Call Per Action| Gemini
+    Queue -->|Verification & Degraded Fallback| Wiki
+```
+
+---
+
+## ✨ Core Capabilities
+
+### 1. Topic → Universe
+Deconstructs any prompt into a central root star accompanied by 6–8 rich, high-curiosity concepts. Each connection is strictly typed with relational explanations and surprise scores.
+
+### 2. 4-Stop Depth Lens
+Every concept can be explored at four nuanced intellectual depths:
+- **Simple**: Plain language, vivid analogies, intuitive mental models.
+- **Student**: Core foundations, key terminology, and structural principles.
+- **Undergrad**: Technical nuance, scientific/mathematical rigor, and analytical dynamics.
+- **Expert**: Frontiers, open problems, counterarguments, and unresolved paradoxes.
+
+Prose streams in real time via Server-Sent Events (SSE) with curiosity prompts (*"What to wonder next"*).
+
+### 3. Rabbit Hole Warp Mode
+Discovers distant-yet-factually-connected concepts that maximize **relevance × unexpectedness**.
+- Provides 3 curated candidates with teasers and a **Surprise Meter** (0–100%).
+- Selecting a rabbit hole triggers **Warp Travel**: the canvas camera smoothly eases across space along a streak effect, settling with a soft arrival pulse.
+
+### 4. Bridge Finder
+Select any two distant topics (e.g., *"Bioluminescence"* and *"Artificial Neural Networks"*); Curiosity Machine discovers a factually grounded 3–5 hop narrative path linking the disparate fields step by step.
+
+### 5. Personal Curiosity Map
+- Chronological trail recording every node visited.
+- Domain filtering pills (*Science*, *Art*, *Philosophy*, etc.).
+- Text search across charted stars.
+- Starred bookmarks and personal observation notes.
+- Dual-synced: persisted on the backend keyed by an anonymous device ID and mirrored locally in IndexedDB for instant offline access.
+
+### 6. Curiosity Profile (Spotify-Wrapped Style)
+- Generates an SVG radar chart tracking your domain distribution.
+- Computes your explorer archetype:
+  - 🌌 **Constellation Weaver**: Balanced explorer across diverse domains.
+  - 🏹 **Abyssal Diver**: Deep, focused specialist within a single field.
+  - 🧭 **Wide Wanderer**: Broad polymath traversing wide conceptual expanses.
+  - 🧪 **Curious Novice**: Newly charting the knowledge cosmos.
+- Highlights blind spots and exploration streaks.
+- Exports a high-resolution PNG card (`html-to-image`) for sharing.
+
+### 7. Wikipedia Grounding & Degraded Fallback
+- Automatically verifies concepts against Wikipedia REST and OpenSearch APIs.
+- **Degraded Fallback Mode**: If the Gemini API quota is exhausted, rate-limited, or absent, the platform switches seamlessly to Wikipedia link extraction. The product remains **100% functional and interactive** with zero downtime.
+
+---
+
+## ⌨ Keyboard Shortcuts
+
+| Shortcut | Action |
+|---|---|
+| <kbd>Cmd</kbd> / <kbd>Ctrl</kbd> + <kbd>K</kbd> | Open Command Palette / Quick Search |
+| <kbd>E</kbd> | Expand selected star into new neighbor concepts |
+| <kbd>R</kbd> | Open Rabbit Hole Drawer |
+| <kbd>B</kbd> | Open Bridge Finder |
+| <kbd>F</kbd> | Fit / Center canvas view to entire cosmos |
+| <kbd>[</kbd> | Step down one depth level (e.g. Student $\rightarrow$ Simple) |
+| <kbd>]</kbd> | Step up one depth level (e.g. Student $\rightarrow$ Undergrad) |
+| <kbd>?</kbd> | Open Keyboard Shortcuts modal |
+| <kbd>Esc</kbd> | Close active drawer or modal |
 
 ---
 
 ## 🛠 Tech Stack
 
-- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS v4, Zustand (state & offline persistence), D3-Force (canvas simulation), Lucide React, CMD-K, HTML-to-Image.
-- **Backend**: Python 3.11+, FastAPI, SQLite with WAL mode & SQLAlchemy 2.0 (async), Google GenAI SDK (`google-genai`), HTTPX, SlowAPI rate limiting.
-- **Testing & Quality**: Pytest with async fixtures, Vitest, Ruff, Mypy, Oxlint.
+### Frontend (`/web`)
+- **React 19** + **TypeScript** + **Vite**
+- **Tailwind CSS v4** (`@tailwindcss/vite`)
+- **Canvas Rendering**: Custom 60fps HTML5 Canvas with D3-Force physics simulation
+- **State Management**: **Zustand** with persistent storage
+- **Offline Storage**: **IndexedDB** (`idb-keyval`) with runtime fallback
+- **Command Palette**: `cmdk`
+- **Icons**: `lucide-react`
+- **Exporting**: `html-to-image`
+- **Testing**: `vitest` + `@testing-library/react` + `jsdom`
+- **Linting**: `oxlint`
+
+### Backend (`/api`)
+- **Python 3.11+** + **FastAPI**
+- **Async Database**: **SQLAlchemy 2.0** + **aiosqlite** (SQLite in WAL mode)
+- **Data Validation**: **Pydantic v2** & **Pydantic Settings**
+- **AI SDK**: **Google GenAI SDK** (`google-genai`) with support for Gemini 3 Flash / Flash-Lite
+- **HTTP Client**: **HTTPX** (async HTTP client for Wikipedia REST API)
+- **Rate Limiting**: **SlowAPI** + in-memory concurrency locks + exponential backoff with jitter
+- **Testing**: **pytest** + `pytest-asyncio` + `hypothesis`
+- **Linting & Typing**: **ruff** + **mypy**
 
 ---
 
-## 🚀 Quickstart & Setup
+## 🚀 Quickstart & Installation
 
 ### Prerequisites
-- Python 3.11+
-- Node.js 18+ & npm
+- [Python 3.11+](https://www.python.org/downloads/)
+- [Node.js 18+](https://nodejs.org/) & npm
+- [Git](https://git-scm.com/)
 
-### 1. Clone & Configure Environment
+### 1. Clone Repository
 ```bash
-git clone https://github.com/your-username/Curiosity_machine.git
+git clone https://github.com/arpansanap1-stack/Curiosity_machine.git
 cd Curiosity_machine
+```
 
-# Copy environment template
+### 2. Configure Environment
+Copy the `.env.example` file to create your `.env`:
+```bash
 cp .env.example .env
 ```
 
-Edit `.env` to configure your free Google AI Studio key:
+Open `.env` in your editor:
 ```env
-# Optional: If left blank or quota exhausted, app gracefully runs in Degraded Wikipedia Mode
-GEMINI_API_KEY=your_gemini_api_key_here
+# Optional: Free API key from Google AI Studio (https://aistudio.google.com/app/apikey)
+# If left blank, Curiosity Machine operates in Wikipedia Degraded Fallback Mode.
+GEMINI_API_KEY=your_free_ai_studio_key_here
+
+# Recommended model (gemini-3.1-flash-lite, or gemini-3.8-flash)
 GEMINI_MODEL=gemini-3.1-flash-lite
+
+# SQLite Database
 DATABASE_URL=sqlite+aiosqlite:///./curiosity.db
+
+# Server configuration
 HOST=127.0.0.1
 PORT=8000
+CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
 ```
 
-### 2. Start the Backend API
+### 3. Start Backend API
 ```bash
-# In project root or api/ directory
+# Install Python dependencies
 pip install -r api/requirements.txt
 
-# Run FastAPI server
-uvicorn api.app.main:app --reload --port 8000
+# Start FastAPI server
+uvicorn api.app.main:app --reload --host 127.0.0.1 --port 8000
 ```
-Backend API will be running at: `http://127.0.0.1:8000` (Docs: `http://127.0.0.1:8000/docs`).
+- API will be live at: `http://127.0.0.1:8000`
+- Interactive Swagger docs: `http://127.0.0.1:8000/docs`
 
-### 3. Start the Frontend App
+### 4. Start Frontend App
+In a new terminal:
 ```bash
 cd web
 npm install
 npm run dev
 ```
-Frontend will be running at: `http://localhost:5173`.
+Open `http://localhost:5173` in your browser.
 
 ---
 
-## 🧪 Verification & Testing
+## 📡 API Reference
 
-Curiosity Machine follows strict quality and correctness protocols:
+| Endpoint | Method | Description |
+|---|---|---|
+| `/api/explore` | `POST` | Generate or fetch root star + 6-8 connected concepts |
+| `/api/expand` | `POST` | Expand an existing star into new related neighbors |
+| `/api/explain` | `POST` | Retrieve single-call explanation for a node and depth level |
+| `/api/explain/stream` | `GET` | SSE stream of node explanation prose and curiosity prompts |
+| `/api/rabbit-hole` | `POST` | Find 3 distant-yet-connected concepts with surprise scores |
+| `/api/bridge` | `POST` | Find a 3-5 hop narrative path between two distant topics |
+| `/api/user/map` | `GET` | Retrieve persistent universe graph for an anonymous device ID |
+| `/api/user/profile` | `GET` | Retrieve exploration statistics, domain counts, and archetype |
+| `/api/health` | `GET` | Health check, cache stats, and Gemini connection status |
 
-### Run Backend Tests (pytest)
+---
+
+## 🧪 Verification & Correctness Protocol
+
+The project enforces strict code quality and type safety:
+
 ```bash
+# Backend test suite (18 automated tests)
 python -m pytest api/tests
-```
 
-### Run Backend Lint & Typecheck
-```bash
+# Backend linting & type checks
 python -m ruff check api
 python -m mypy api
-```
 
-### Run Frontend Tests (Vitest)
-```bash
+# Frontend test suite (Vitest)
 cd web
 npm run test
-```
 
-### Run Frontend Lint & Build
-```bash
-cd web
-npm run lint
+# Frontend linting & production build
+npx oxlint
 npm run build
 ```
 
 ---
 
-## 🌐 Free Tier Deployment Guide
+## 🛡 Free-Tier & Rate Limit Discipline
 
-### Frontend (Vercel / Cloudflare Pages / Netlify)
-1. Push repository to GitHub.
-2. Link the `/web` directory as root directory on Vercel or Cloudflare Pages.
-3. Build command: `npm run build`
-4. Output directory: `dist`
-5. Configure environment variable: `VITE_API_URL` pointing to your deployed backend.
-
-### Backend (Render / Fly.io / Hugging Face Spaces)
-1. Deploy `/api` on Render (Web Service) or Fly.io with a persistent volume mounted for `curiosity.db`.
-2. Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-3. Add environment variables: `GEMINI_API_KEY`, `GEMINI_MODEL`.
+Curiosity Machine is engineered for zero-cost operation on free tiers:
+- **1 LLM Call Per User Action**: Strict rule against fanning out calls per click.
+- **Deterministic SQLite Caching**: All prompt responses are cached by SHA-256 hash. Cache hits cost 0 API calls and resolve in milliseconds.
+- **Lazy Generation**: Explanations and rabbit holes are generated on-demand when inspected.
+- **Exponential Backoff with Jitter**: On HTTP 429 or 503 high demand, requests queue and retry automatically.
+- **Graceful Error Handling**: Users never see raw stack traces or JSON errors; friendly UI states inform the user when the cosmos is taking a breath.
+- **Degraded Fallback**: If quota is completely exhausted, the app seamlessly runs using Wikipedia link graphs.
 
 ---
 
-## 🛡 Quota & Rate Limit Discipline
-- **Single LLM call per action**: Never fans out calls.
-- **SQLite Deterministic Caching**: Repeated queries return in 0ms at 0 API cost.
-- **Exponential Backoff & Jitter**: Automatic retry on HTTP 429 without exposing raw errors to the user.
-- **Degraded Fallback Mode**: Gracefully navigates topics using Wikipedia's knowledge graph if quota is exhausted.
+## 🌐 Free-Tier Deployment
+
+- **Frontend**: Deploy on [Vercel](https://vercel.com), [Cloudflare Pages](https://pages.cloudflare.com), or [Netlify]. Set root directory to `web/` and build command to `npm run build`. Set `VITE_API_URL` to your backend URL.
+- **Backend**: Deploy on [Render](https://render.com), [Fly.io](https://fly.io), or [Hugging Face Spaces]. Mount a persistent volume for `curiosity.db`.
 
 ---
 
 ## 📄 License
-MIT License. Built with curiosity.
+
+Distributed under the [MIT License](LICENSE). Built with curiosity.
