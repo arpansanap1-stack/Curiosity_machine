@@ -1,8 +1,8 @@
 """Core graph orchestration service managing nodes, edges, exploration, and user state."""
 
+import asyncio
 import re
 import uuid
-from typing import Any
 
 from sqlalchemy import and_, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -263,12 +263,21 @@ class GraphService:
             "summary_short": f"Exploration of {clean_topic}.",
         }
 
-        # Verify root concept with Wikipedia in background
-        root_wiki = await verify_concept_with_wikipedia(root_info["label"])
+        raw_neighbors = llm_result.get("neighbors", [])[:8]
+
+        # Parallelize Wikipedia verification for root and all neighbors concurrently
+        wiki_tasks = [verify_concept_with_wikipedia(root_info["label"])] + [
+            verify_concept_with_wikipedia(item.get("wikipedia_title") or item.get("label", ""))
+            for item in raw_neighbors
+        ]
+        all_wiki_results = await asyncio.gather(*wiki_tasks, return_exceptions=True)
+
+        root_wiki_res = all_wiki_results[0]
+        root_wiki = root_wiki_res if isinstance(root_wiki_res, dict) else None
         root_verified = root_wiki is not None
-        root_wiki_title = root_wiki["wiki_title"] if root_wiki else root_info.get("wikipedia_title")
-        root_wiki_url = root_wiki["wiki_url"] if root_wiki else None
-        root_wiki_extract = root_wiki["wiki_extract"] if root_wiki else None
+        root_wiki_title = str(root_wiki["wiki_title"]) if (root_wiki and "wiki_title" in root_wiki) else root_info.get("wikipedia_title")
+        root_wiki_url = str(root_wiki["wiki_url"]) if (root_wiki and "wiki_url" in root_wiki) else None
+        root_wiki_extract = str(root_wiki["wiki_extract"]) if (root_wiki and "wiki_extract" in root_wiki) else None
 
         domain_val = root_info.get("domain", Domain.SCIENCE.value)
         domain_enum = Domain(domain_val) if domain_val in [d.value for d in Domain] else Domain.OTHER
@@ -291,51 +300,47 @@ class GraphService:
         neighbor_ids_for_cache: list[str] = []
         edge_ids_for_cache: list[str] = []
 
-        # Background verification tasks for neighbors
-        raw_neighbors = llm_result.get("neighbors", [])
-
-        async def process_neighbor(item: dict[str, Any]) -> tuple[NodeEntity, EdgeEntity]:
-            n_label = item.get("label", "").strip()
-            n_domain_val = item.get("domain", Domain.OTHER.value)
-            n_domain = Domain(n_domain_val) if n_domain_val in [d.value for d in Domain] else Domain.OTHER
-            n_rel_val = item.get("relation_type", RelationType.PART_OF.value)
-            n_rel = RelationType(n_rel_val) if n_rel_val in [r.value for r in RelationType] else RelationType.PART_OF
-
-            wiki_res = await verify_concept_with_wikipedia(item.get("wikipedia_title") or n_label)
-            verified = wiki_res is not None
-            wiki_title = wiki_res["wiki_title"] if wiki_res else item.get("wikipedia_title")
-            wiki_url = wiki_res["wiki_url"] if wiki_res else None
-            wiki_extract = wiki_res["wiki_extract"] if wiki_res else None
-
-            node_ent = await self.get_or_create_node(
-                session=session,
-                label=n_label,
-                domain=n_domain,
-                summary_short=item.get("summary_short", f"Concept related to {root_entity.label}.")[:180],
-                wiki_title=wiki_title,
-                wiki_url=wiki_url,
-                wiki_extract=wiki_extract,
-                verified=verified,
-                is_wildcard=bool(item.get("is_wildcard", False)),
-            )
-
-            edge_ent = await self.get_or_create_edge(
-                session=session,
-                source_id=root_entity.id,
-                target_id=node_ent.id,
-                relation_type=n_rel,
-                why=item.get("why", f"Connected to {root_entity.label}.")[:250],
-                surprise_score=float(item.get("surprise_score", 0.5)),
-            )
-            return node_ent, edge_ent
-
-        for n_item in raw_neighbors[:8]:
+        neighbor_wiki_results = all_wiki_results[1:]
+        for idx, n_item in enumerate(raw_neighbors):
             try:
-                n_ent, e_ent = await process_neighbor(n_item)
-                neighbor_nodes.append(self.entity_to_node_schema(n_ent))
-                created_edges.append(self.entity_to_edge_schema(e_ent))
-                neighbor_ids_for_cache.append(n_ent.id)
-                edge_ids_for_cache.append(e_ent.id)
+                n_label = n_item.get("label", "").strip()
+                n_domain_val = n_item.get("domain", Domain.OTHER.value)
+                n_domain = Domain(n_domain_val) if n_domain_val in [d.value for d in Domain] else Domain.OTHER
+                n_rel_val = n_item.get("relation_type", RelationType.PART_OF.value)
+                n_rel = RelationType(n_rel_val) if n_rel_val in [r.value for r in RelationType] else RelationType.PART_OF
+
+                w_res = neighbor_wiki_results[idx] if idx < len(neighbor_wiki_results) else None
+                wiki_res = w_res if isinstance(w_res, dict) else None
+                verified = wiki_res is not None
+                wiki_title = str(wiki_res["wiki_title"]) if (wiki_res and "wiki_title" in wiki_res) else n_item.get("wikipedia_title")
+                wiki_url = str(wiki_res["wiki_url"]) if (wiki_res and "wiki_url" in wiki_res) else None
+                wiki_extract = str(wiki_res["wiki_extract"]) if (wiki_res and "wiki_extract" in wiki_res) else None
+
+                node_ent = await self.get_or_create_node(
+                    session=session,
+                    label=n_label,
+                    domain=n_domain,
+                    summary_short=n_item.get("summary_short", f"Concept related to {root_entity.label}.")[:180],
+                    wiki_title=wiki_title,
+                    wiki_url=wiki_url,
+                    wiki_extract=wiki_extract,
+                    verified=verified,
+                    is_wildcard=bool(n_item.get("is_wildcard", False)),
+                )
+
+                edge_ent = await self.get_or_create_edge(
+                    session=session,
+                    source_id=root_entity.id,
+                    target_id=node_ent.id,
+                    relation_type=n_rel,
+                    why=n_item.get("why", f"Connected to {root_entity.label}.")[:250],
+                    surprise_score=float(n_item.get("surprise_score", 0.5)),
+                )
+
+                neighbor_nodes.append(self.entity_to_node_schema(node_ent))
+                created_edges.append(self.entity_to_edge_schema(edge_ent))
+                neighbor_ids_for_cache.append(node_ent.id)
+                edge_ids_for_cache.append(edge_ent.id)
             except Exception:
                 continue
 
@@ -415,20 +420,31 @@ class GraphService:
         neighbor_ids_for_cache: list[str] = []
         edge_ids_for_cache: list[str] = []
 
-        for item in llm_result.get("neighbors", [])[:8]:
+        raw_candidates = [
+            item for item in llm_result.get("neighbors", [])[:8]
+            if item.get("label", "").strip() and item.get("label", "").strip().lower() != parent_ent.label.lower()
+        ]
+
+        # Parallelize Wikipedia verification
+        wiki_tasks = [
+            verify_concept_with_wikipedia(item.get("wikipedia_title") or item.get("label", ""))
+            for item in raw_candidates
+        ]
+        wiki_results = await asyncio.gather(*wiki_tasks, return_exceptions=True)
+
+        for idx, item in enumerate(raw_candidates):
             n_label = item.get("label", "").strip()
-            if not n_label or n_label.lower() == parent_ent.label.lower():
-                continue
             n_domain_val = item.get("domain", Domain.OTHER.value)
             n_domain = Domain(n_domain_val) if n_domain_val in [d.value for d in Domain] else Domain.OTHER
             n_rel_val = item.get("relation_type", RelationType.PART_OF.value)
             n_rel = RelationType(n_rel_val) if n_rel_val in [r.value for r in RelationType] else RelationType.PART_OF
 
-            wiki_res = await verify_concept_with_wikipedia(item.get("wikipedia_title") or n_label)
+            w_res = wiki_results[idx] if idx < len(wiki_results) else None
+            wiki_res = w_res if isinstance(w_res, dict) else None
             verified = wiki_res is not None
-            wiki_title = wiki_res["wiki_title"] if wiki_res else item.get("wikipedia_title")
-            wiki_url = wiki_res["wiki_url"] if wiki_res else None
-            wiki_extract = wiki_res["wiki_extract"] if wiki_res else None
+            wiki_title = str(wiki_res["wiki_title"]) if (wiki_res and "wiki_title" in wiki_res) else item.get("wikipedia_title")
+            wiki_url = str(wiki_res["wiki_url"]) if (wiki_res and "wiki_url" in wiki_res) else None
+            wiki_extract = str(wiki_res["wiki_extract"]) if (wiki_res and "wiki_extract" in wiki_res) else None
 
             n_ent = await self.get_or_create_node(
                 session=session,

@@ -15,8 +15,13 @@ import {
   UserTrailStep,
 } from '../types';
 import { getDeviceId } from './storage';
+function getApiBase(): string {
+  const envUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/+$/, '');
+  if (!envUrl) return '/api';
+  return envUrl.endsWith('/api') ? envUrl : `${envUrl}/api`;
+}
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+const API_BASE = getApiBase();
 
 export class ApiError extends Error {
   status: number;

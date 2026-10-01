@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     )
 
     # Server settings
-    host: str = "127.0.0.1"
+    host: str = "0.0.0.0"
     port: int = 8000
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
 

@@ -218,14 +218,17 @@ export const KnowledgeCanvas: React.FC<CanvasProps> = ({
 
     const render = () => {
       pulseTime += 0.025;
-      const width = canvas.width;
-      const height = canvas.height;
+      const dpr = window.devicePixelRatio || 1;
+      const cssW = canvas.clientWidth || (canvas.width / dpr);
+      const cssH = canvas.clientHeight || (canvas.height / dpr);
 
-      ctx.clearRect(0, 0, width, height);
+      ctx.save();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, cssW, cssH);
 
       const { x: tx, y: ty, k } = transformRef.current;
-      const centerScreenX = width / 2;
-      const centerScreenY = height / 2;
+      const centerScreenX = cssW / 2;
+      const centerScreenY = cssH / 2;
 
       // 1. Draw Parallax Background Starfield
       ctx.save();
@@ -554,11 +557,11 @@ export const KnowledgeCanvas: React.FC<CanvasProps> = ({
       ctx.restore();
 
       // Draw Canvas Minimap in screen space (bottom right)
-      if (width > 600 && simNodes.length > 0) {
+      if (cssW > 600 && simNodes.length > 0) {
         const miniW = 140;
         const miniH = 100;
-        const miniX = width - miniW - 24;
-        const miniY = height - miniH - 24;
+        const miniX = cssW - miniW - 24;
+        const miniY = cssH - miniH - 24;
 
         ctx.save();
         ctx.fillStyle = isDark ? 'rgba(16, 19, 28, 0.75)' : 'rgba(237, 231, 220, 0.75)';
@@ -583,6 +586,8 @@ export const KnowledgeCanvas: React.FC<CanvasProps> = ({
         ctx.restore();
       }
 
+      ctx.restore(); // Restore root canvas transform
+
       animFrameId = requestAnimationFrame(render);
     };
 
@@ -604,15 +609,10 @@ export const KnowledgeCanvas: React.FC<CanvasProps> = ({
       const width = container.clientWidth;
       const height = container.clientHeight;
 
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
-
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.scale(dpr, dpr);
-      }
     };
 
     handleResize();
@@ -751,6 +751,60 @@ export const KnowledgeCanvas: React.FC<CanvasProps> = ({
     transformRef.current.k = newK;
   };
 
+  // Mobile Touch Handlers
+  const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
+  const pinchDistRef = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      touchStartRef.current = { x: touch.clientX, y: touch.clientY, time: Date.now() };
+      isDraggingRef.current = true;
+      dragStartRef.current = { x: touch.clientX, y: touch.clientY };
+    } else if (e.touches.length === 2) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      pinchDistRef.current = Math.hypot(dx, dy);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (e.touches.length === 1 && isDraggingRef.current) {
+      const touch = e.touches[0];
+      const dx = touch.clientX - dragStartRef.current.x;
+      const dy = touch.clientY - dragStartRef.current.y;
+      transformRef.current.x += dx;
+      transformRef.current.y += dy;
+      dragStartRef.current = { x: touch.clientX, y: touch.clientY };
+    } else if (e.touches.length === 2 && pinchDistRef.current) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const dist = Math.hypot(dx, dy);
+      const ratio = dist / pinchDistRef.current;
+      pinchDistRef.current = dist;
+      const newK = Math.max(0.25, Math.min(transformRef.current.k * ratio, 3.5));
+      transformRef.current.k = newK;
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (touchStartRef.current && e.changedTouches.length === 1) {
+      const touch = e.changedTouches[0];
+      const dx = Math.abs(touch.clientX - touchStartRef.current.x);
+      const dy = Math.abs(touch.clientY - touchStartRef.current.y);
+      const dt = Date.now() - touchStartRef.current.time;
+      if (dx < 12 && dy < 12 && dt < 350) {
+        const node = getNodeAtPosition(touch.clientX, touch.clientY);
+        if (node) {
+          onNodeClick(node);
+        }
+      }
+    }
+    isDraggingRef.current = false;
+    touchStartRef.current = null;
+    pinchDistRef.current = null;
+  };
+
   // Center & Fit View Helper
   const fitView = useCallback(() => {
     const simNodes = animatedNodesRef.current;
@@ -817,7 +871,10 @@ export const KnowledgeCanvas: React.FC<CanvasProps> = ({
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         onWheel={handleWheel}
-        className="w-full h-full block cursor-grab active:cursor-grabbing"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        className="w-full h-full block cursor-grab active:cursor-grabbing touch-none"
       />
 
       {/* Floating Hover Tooltip */}
