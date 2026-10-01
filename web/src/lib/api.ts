@@ -16,7 +16,7 @@ import {
 } from '../types';
 import { getDeviceId } from './storage';
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 export class ApiError extends Error {
   status: number;

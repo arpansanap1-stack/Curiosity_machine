@@ -1,5 +1,6 @@
 """Application configuration and settings."""
 
+import os
 from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -21,8 +22,12 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     gemini_model: str = "gemini-3.1-flash-lite"
 
-    # Database
-    database_url: str = "sqlite+aiosqlite:///./curiosity.db"
+    # Database (uses /tmp on Vercel serverless functions where root filesystem is read-only)
+    database_url: str = (
+        "sqlite+aiosqlite:////tmp/curiosity.db"
+        if os.environ.get("VERCEL")
+        else "sqlite+aiosqlite:///./curiosity.db"
+    )
 
     # Server settings
     host: str = "127.0.0.1"
