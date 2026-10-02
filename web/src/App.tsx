@@ -203,9 +203,8 @@ export const App: React.FC = () => {
     triggerWarp,
     handleExpandNode,
   ]);
-
   return (
-    <div className="relative w-screen h-screen flex flex-col overflow-hidden bg-black text-white font-sans select-none">
+    <div className="relative w-screen h-[100dvh] min-h-[100dvh] flex flex-col overflow-hidden bg-[var(--bg-base)] text-[var(--text-primary)] select-none">
       {/* Top Header */}
       <TopBar />
 
@@ -300,10 +299,10 @@ export const App: React.FC = () => {
         onClose={() => setShortcutsModalOpen(false)}
       />
 
-      {/* Friendly Notification Toast */}
+      {/* Refined Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl glass-panel-elevated border border-indigo-500/40 text-xs font-semibold text-white shadow-2xl flex items-center gap-2 animate-bounce">
-          <div className="w-2 h-2 rounded-full bg-indigo-400" />
+        <div className="fixed bottom-14 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-full glass-panel-elevated border border-indigo-400/30 text-xs font-medium text-[var(--text-primary)] shadow-2xl flex items-center gap-2.5 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="w-2 h-2 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
           <span>{toastMessage}</span>
         </div>
       )}

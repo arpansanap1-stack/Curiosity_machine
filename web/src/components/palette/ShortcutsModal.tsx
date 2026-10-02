@@ -23,23 +23,24 @@ export const ShortcutsModal: React.FC<ShortcutsProps> = ({ isOpen, onClose }) =>
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#07090e]/75 backdrop-blur-xl animate-in fade-in duration-200"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md glass-panel-elevated rounded-2xl border border-white/10 shadow-2xl p-6 space-y-4"
+        className="w-full max-w-md glass-panel-elevated rounded-2xl border border-[var(--border)] shadow-[0_24px_50px_rgba(0,0,0,0.6)] p-6 space-y-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-white/10 pb-3">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
+          <div className="flex items-center gap-2.5">
             <Keyboard className="w-5 h-5 text-indigo-400" />
-            <h3 className="text-sm font-bold text-white tracking-tight">
-              Keyboard Shortcuts
+            <h3 className="font-display text-sm font-bold text-[var(--text-primary)] tracking-tight">
+              Keyboard Navigation & Shortcuts
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+            aria-label="Close shortcuts"
+            className="btn-tactile p-1 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all"
           >
             <X className="w-4 h-4" />
           </button>
@@ -49,10 +50,10 @@ export const ShortcutsModal: React.FC<ShortcutsProps> = ({ isOpen, onClose }) =>
           {shortcuts.map((s) => (
             <div
               key={s.key}
-              className="flex items-center justify-between py-1.5 border-b border-white/5"
+              className="flex items-center justify-between py-2 border-b border-white/5"
             >
-              <span className="text-gray-300">{s.desc}</span>
-              <kbd className="px-2 py-1 rounded bg-white/10 text-white font-mono text-[11px] font-semibold border border-white/10">
+              <span className="text-[var(--text-muted)] font-medium">{s.desc}</span>
+              <kbd className="px-2.5 py-1 rounded-lg bg-white/10 text-[var(--text-primary)] font-mono-numbers text-[11px] font-semibold border border-white/10 shadow-inner">
                 {s.key}
               </kbd>
             </div>

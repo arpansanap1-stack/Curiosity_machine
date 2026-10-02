@@ -3,64 +3,64 @@
 @layer base {
   :root {
     --theme-name: 'observatory';
-    --bg-base: #07080d;
-    --bg-gradient: radial-gradient(circle at 50% 50%, #0b0d14 0%, #07080d 100%);
-    --surface: #10131c;
-    --surface-elevated: #161a26;
+    --bg-base: #07090e;
+    --bg-gradient: radial-gradient(circle at 50% 25%, #0e1220 0%, #07090e 100%);
+    --surface: #101422;
+    --surface-elevated: #151b2d;
     --border: rgba(255, 255, 255, 0.08);
-    --border-hover: rgba(255, 255, 255, 0.18);
-    --text-primary: #e8eaf2;
-    --text-muted: #8a90a5;
-    --accent: #7c8cff;
-    --accent-glow: rgba(124, 140, 255, 0.25);
-    --success: #4ade9a;
-    --warning: #f5b84b;
+    --border-hover: rgba(255, 255, 255, 0.16);
+    --text-primary: #f0f2f8;
+    --text-muted: #8b92a7;
+    --accent: #6366f1;
+    --accent-glow: rgba(99, 102, 241, 0.22);
+    --success: #34d399;
+    --warning: #fbbf24;
 
     /* Domains */
-    --domain-science: #5bc0ff;
-    --domain-nature: #56d39b;
-    --domain-history: #f2b45c;
+    --domain-science: #38bdf8;
+    --domain-nature: #34d399;
+    --domain-history: #fbbf24;
     --domain-art: #f472b6;
-    --domain-tech: #8b8cff;
+    --domain-tech: #818cf8;
     --domain-math: #22d3ee;
     --domain-philosophy: #c084fc;
-    --domain-society: #fb7c5c;
-    --domain-other: #9aa3b8;
+    --domain-society: #fb923c;
+    --domain-other: #94a3b8;
 
     /* Canvas tokens */
-    --starfield-opacity: 0.85;
-    --nebula-opacity: 0.45;
+    --starfield-opacity: 0.9;
+    --nebula-opacity: 0.5;
   }
 
   [data-theme='atlas'] {
     --theme-name: 'atlas';
-    --bg-base: #f6f1e7;
-    --bg-gradient: radial-gradient(circle at 50% 50%, #fbf8f2 0%, #f6f1e7 100%);
-    --surface: #ede7dc;
-    --surface-elevated: #e5ded0;
-    --border: rgba(31, 36, 48, 0.12);
-    --border-hover: rgba(31, 36, 48, 0.25);
-    --text-primary: #1f2430;
-    --text-muted: #6b6f7a;
-    --accent: #4f63c8;
-    --accent-glow: rgba(79, 99, 200, 0.18);
-    --success: #2e8b57;
+    --bg-base: #f7f3ea;
+    --bg-gradient: radial-gradient(circle at 50% 25%, #fdfbf7 0%, #f7f3ea 100%);
+    --surface: #ece5d7;
+    --surface-elevated: #e2d9ca;
+    --border: rgba(36, 42, 56, 0.1);
+    --border-hover: rgba(36, 42, 56, 0.22);
+    --text-primary: #1a1e29;
+    --text-muted: #646a78;
+    --accent: #4353b3;
+    --accent-glow: rgba(67, 83, 179, 0.18);
+    --success: #059669;
     --warning: #d97706;
 
-    /* Domains desaturated 20% */
-    --domain-science: #499acc;
-    --domain-nature: #46aa7d;
-    --domain-history: #c99347;
-    --domain-art: #c95c95;
-    --domain-tech: #6e6fcc;
-    --domain-math: #1ba9be;
-    --domain-philosophy: #9c6acc;
-    --domain-society: #ca6248;
-    --domain-other: #7c8394;
+    /* Domains desaturated */
+    --domain-science: #0284c7;
+    --domain-nature: #059669;
+    --domain-history: #d97706;
+    --domain-art: #db2777;
+    --domain-tech: #4f46e5;
+    --domain-math: #0891b2;
+    --domain-philosophy: #9333ea;
+    --domain-society: #ea580c;
+    --domain-other: #64748b;
 
     /* Canvas tokens */
-    --starfield-opacity: 0.15;
-    --nebula-opacity: 0.25;
+    --starfield-opacity: 0.2;
+    --nebula-opacity: 0.3;
   }
 }
 
@@ -68,48 +68,106 @@
   box-sizing: border-box;
 }
 
+html {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 body {
   margin: 0;
   padding: 0;
-  background: var(--bg-base);
+  background-color: var(--bg-base);
   background-image: var(--bg-gradient);
   color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
   overflow: hidden;
   user-select: none;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  position: relative;
 }
 
-/* Glassmorphism utility for floating panels */
+/* Subtle stardust noise texture overlay to break sterile digital flatness */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+[data-theme='atlas'] body::before {
+  opacity: 0.015;
+}
+
+/* Typography Utility Classes */
+.font-display {
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.025em;
+}
+
+.font-mono-numbers {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* True Glassmorphism with inner 1px refraction highlight */
 .glass-panel {
-  background: color-mix(in srgb, var(--surface) 80%, transparent);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border);
-  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 16px 36px -12px rgba(0, 0, 0, 0.45);
 }
 
 .glass-panel-elevated {
-  background: color-mix(in srgb, var(--surface-elevated) 88%, transparent);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: color-mix(in srgb, var(--surface-elevated) 90%, transparent);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--border-hover);
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 24px 48px -12px rgba(0, 0, 0, 0.55);
 }
 
-/* Custom scrollbars */
+[data-theme='atlas'] .glass-panel {
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.7), 0 16px 36px -12px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme='atlas'] .glass-panel-elevated {
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.8), 0 24px 48px -12px rgba(0, 0, 0, 0.12);
+}
+
+/* Tactile Button Feedback */
+.btn-tactile {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-tactile:active:not(:disabled) {
+  transform: scale(0.98) translateY(1px);
+}
+
+/* Focus Ring */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--border-hover);
   border-radius: 9999px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }

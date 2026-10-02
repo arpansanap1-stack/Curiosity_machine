@@ -53,55 +53,56 @@ export const MyMapView: React.FC<MyMapViewProps> = ({ onSelectNode, onClose }) =
   const totalStarred = Object.values(userNodes).filter((un) => un.starred).length;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-      <div className="w-full max-w-4xl glass-panel-elevated rounded-2xl border border-white/10 shadow-2xl flex flex-col h-[85vh] overflow-hidden">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-[#07090e]/75 backdrop-blur-xl animate-in fade-in duration-200">
+      <div className="w-full max-w-4xl glass-panel-elevated rounded-2xl border border-[var(--border)] shadow-[0_24px_50px_rgba(0,0,0,0.6)] flex flex-col h-[85vh] overflow-hidden">
         {/* Top Header */}
-        <div className="p-5 border-b border-white/10 flex items-center justify-between">
+        <div className="p-5 border-b border-[var(--border)] flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center text-indigo-300">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-600/20 border border-indigo-400/30 flex items-center justify-center text-indigo-300 shadow-[0_0_12px_rgba(99,102,241,0.2)]">
               <Compass className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white tracking-tight">
+              <h2 className="font-display text-base font-bold text-[var(--text-primary)] tracking-tight">
                 Personal Curiosity Map
               </h2>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-[var(--text-muted)] font-mono-numbers">
                 {nodes.length} concepts charted · {totalStarred} starred
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+            aria-label="Close curiosity map"
+            className="btn-tactile p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Filters and Search Bar */}
-        <div className="p-4 border-b border-white/10 space-y-3 bg-black/20">
+        <div className="p-4.5 border-b border-[var(--border)] space-y-3 bg-black/15">
           <div className="flex items-center gap-3">
             <div className="flex-1 relative">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
               <input
                 type="text"
                 value={searchFilter}
                 onChange={(e) => setSearchFilter(e.target.value)}
-                placeholder="Search across concepts, summaries, or personal notes…"
-                className="w-full h-10 pl-9 pr-4 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-400"
+                placeholder="Search across charted concepts, summaries, or personal notes…"
+                className="w-full h-10.5 pl-10 pr-4 rounded-xl bg-[var(--surface)]/80 border border-[var(--border)] text-xs text-[var(--text-primary)] placeholder-[var(--text-muted)]/60 focus:outline-none focus:ring-2 focus:ring-indigo-400/40 focus:border-indigo-400/60 transition-all"
               />
             </div>
 
             <button
               onClick={() => setOnlyStarred(!onlyStarred)}
-              className={`px-3 h-10 rounded-xl border text-xs font-medium flex items-center gap-1.5 transition-colors ${
+              className={`btn-tactile px-3.5 h-10.5 rounded-xl border text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
                 onlyStarred
-                  ? 'bg-amber-400/20 text-amber-300 border-amber-400/30'
-                  : 'bg-white/5 text-gray-400 border-white/10 hover:text-white'
+                  ? 'bg-amber-400/15 text-amber-300 border-amber-400/30'
+                  : 'bg-white/5 text-[var(--text-muted)] border-[var(--border)] hover:text-[var(--text-primary)]'
               }`}
             >
               <Star className={`w-3.5 h-3.5 ${onlyStarred ? 'fill-amber-400' : ''}`} />
-              Starred ({totalStarred})
+              <span>Starred ({totalStarred})</span>
             </button>
           </div>
 
@@ -109,10 +110,10 @@ export const MyMapView: React.FC<MyMapViewProps> = ({ onSelectNode, onClose }) =
           <div className="flex flex-wrap gap-1.5 items-center">
             <button
               onClick={() => setFilterDomain('all')}
-              className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
+              className={`btn-tactile px-3 py-1 rounded-lg text-[11px] font-medium transition-all cursor-pointer ${
                 filterDomain === 'all'
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'bg-white/5 text-gray-400 hover:text-white'
+                  ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/30'
+                  : 'bg-white/5 text-[var(--text-muted)] hover:text-[var(--text-primary)]'
               }`}
             >
               All Domains
@@ -126,13 +127,13 @@ export const MyMapView: React.FC<MyMapViewProps> = ({ onSelectNode, onClose }) =
                 <button
                   key={dom}
                   onClick={() => setFilterDomain(isSelected ? 'all' : dom)}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-medium flex items-center gap-1.5 transition-all ${
+                  className={`btn-tactile px-2.5 py-1 rounded-lg text-[11px] font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
                     isSelected
                       ? 'text-white border'
-                      : 'bg-white/5 text-gray-400 hover:text-white border border-transparent'
+                      : 'bg-white/5 text-[var(--text-muted)] hover:text-[var(--text-primary)] border border-transparent'
                   }`}
                   style={{
-                    backgroundColor: isSelected ? `${col}30` : undefined,
+                    backgroundColor: isSelected ? `${col}25` : undefined,
                     borderColor: isSelected ? col : undefined,
                   }}
                 >
@@ -141,7 +142,7 @@ export const MyMapView: React.FC<MyMapViewProps> = ({ onSelectNode, onClose }) =
                     style={{ backgroundColor: col }}
                   />
                   <span>{DOMAIN_LABELS[dom]}</span>
-                  <span className="text-[10px] opacity-60">({count})</span>
+                  <span className="text-[10px] opacity-60 font-mono-numbers">({count})</span>
                 </button>
               );
             })}
@@ -151,11 +152,11 @@ export const MyMapView: React.FC<MyMapViewProps> = ({ onSelectNode, onClose }) =
         {/* Nodes Grid */}
         <div className="flex-1 overflow-y-auto p-5">
           {filteredNodes.length === 0 ? (
-            <div className="py-20 text-center text-xs text-gray-500">
+            <div className="py-24 text-center text-xs text-[var(--text-muted)]">
               No concepts match your filter criteria.
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
               {filteredNodes.map((n) => {
                 const col = domainColors[n.domain];
                 const isStar = userNodes[n.id]?.starred;
@@ -168,7 +169,7 @@ export const MyMapView: React.FC<MyMapViewProps> = ({ onSelectNode, onClose }) =
                       setViewMode('explore');
                       onClose();
                     }}
-                    className="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-indigo-500/40 cursor-pointer transition-all space-y-2 group"
+                    className="btn-tactile p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-[var(--border)] hover:border-indigo-400/40 cursor-pointer transition-all space-y-2 group shadow-sm"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 truncate">
@@ -176,26 +177,26 @@ export const MyMapView: React.FC<MyMapViewProps> = ({ onSelectNode, onClose }) =
                           className="w-2.5 h-2.5 rounded-full shrink-0"
                           style={{ backgroundColor: col }}
                         />
-                        <span className="text-sm font-semibold text-white group-hover:text-indigo-300 transition-colors truncate">
+                        <span className="font-display text-sm font-semibold text-[var(--text-primary)] group-hover:text-indigo-400 transition-colors truncate">
                           {n.label}
                         </span>
                       </div>
                       {isStar && <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />}
                     </div>
 
-                    <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-[var(--text-muted)] line-clamp-2 leading-relaxed">
                       {n.summary_short}
                     </p>
 
                     {notes && (
-                      <div className="p-2 rounded bg-black/30 border border-white/5 text-[11px] text-gray-300 italic line-clamp-2">
+                      <div className="p-2.5 rounded-xl bg-black/25 border border-white/5 text-[11px] text-[var(--text-muted)] italic line-clamp-2">
                         "{notes}"
                       </div>
                     )}
 
-                    <div className="flex items-center justify-between text-[10px] text-gray-500 pt-1">
+                    <div className="flex items-center justify-between text-[10px] text-[var(--text-muted)] pt-1">
                       <span className="capitalize">{n.domain}</span>
-                      <span className="uppercase font-mono text-[9px] px-1.5 py-0.5 rounded bg-white/5">
+                      <span className="uppercase font-mono-numbers text-[9px] px-1.5 py-0.5 rounded bg-white/5 border border-white/5">
                         {n.depth_explored}
                       </span>
                     </div>

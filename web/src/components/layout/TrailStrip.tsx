@@ -26,15 +26,18 @@ export const TrailStrip: React.FC = () => {
   return (
     <div
       aria-label="Exploration Trail"
-      className="hidden md:flex items-center gap-2 h-10 px-4 glass-panel border-t border-white/10 z-20 overflow-x-auto text-xs"
+      className="hidden md:flex items-center gap-2.5 h-11 px-4 glass-panel border-t border-[var(--border)] z-20 overflow-x-auto text-xs select-none"
     >
-      <div className="flex items-center gap-1.5 text-gray-400 font-medium shrink-0 pr-2 border-r border-white/10">
+      <div className="flex items-center gap-2 text-[var(--text-muted)] font-medium shrink-0 pr-3 border-r border-[var(--border)]">
         <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-        <span>Comet Trail:</span>
+        <span className="font-display font-semibold tracking-wide uppercase text-[10px] text-indigo-300">
+          Comet Trail
+        </span>
         <button
           onClick={handleReplay}
-          title="Replay journey"
-          className="p-1 rounded hover:bg-white/10 text-indigo-400 transition-colors"
+          title="Replay exploration sequence"
+          aria-label="Replay exploration sequence"
+          className="btn-tactile p-1 rounded-md hover:bg-white/10 text-indigo-400 transition-colors"
         >
           <Play className="w-3 h-3 fill-indigo-400" />
         </button>
@@ -53,14 +56,14 @@ export const TrailStrip: React.FC = () => {
                   triggerWarp(n!.x, n!.y, n!.id);
                 }
               }}
-              className={`shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs transition-all ${
+              className={`btn-tactile shrink-0 flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all ${
                 isSelected
-                  ? 'bg-white/20 text-white border border-white/30 shadow'
-                  : 'bg-white/5 text-gray-300 hover:bg-white/10 border border-white/5'
+                  ? 'bg-indigo-600/30 text-white border border-indigo-400/50 shadow-[0_0_12px_rgba(99,102,241,0.3)]'
+                  : 'bg-white/5 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/10 border border-white/5'
               }`}
             >
               <span
-                className="w-2 h-2 rounded-full"
+                className="w-2 h-2 rounded-full shrink-0"
                 style={{ backgroundColor: col }}
               />
               <span className="truncate max-w-[140px]">{n!.label}</span>

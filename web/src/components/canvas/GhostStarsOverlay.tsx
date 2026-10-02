@@ -44,9 +44,9 @@ export const GhostStarsOverlay: React.FC<GhostStarsProps> = ({
       </div>
 
       {/* Floating status badge */}
-      <div className="absolute bottom-16 px-4 py-2 rounded-full glass-panel-elevated border border-indigo-500/30 flex items-center gap-2.5 shadow-2xl">
-        <div className="w-2 h-2 rounded-full bg-indigo-400 animate-ping" />
-        <span className="text-xs font-semibold text-white tracking-wide">
+      <div className="absolute bottom-16 px-4.5 py-2.5 rounded-full glass-panel-elevated border border-indigo-400/35 flex items-center gap-3 shadow-[0_16px_36px_rgba(0,0,0,0.5)] backdrop-blur-xl">
+        <div className="w-2 h-2 rounded-full bg-indigo-400 shadow-[0_0_10px_rgba(99,102,241,0.9)] animate-pulse" />
+        <span className="font-display text-xs font-semibold text-[var(--text-primary)] tracking-wide">
           {message}
         </span>
       </div>

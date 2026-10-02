@@ -298,7 +298,7 @@ export const KnowledgeCanvas: React.FC<CanvasProps> = ({
         // Semantic zoom level 1: Galaxy level label (when zoomed out)
         if (k < 0.65) {
           ctx.save();
-          ctx.font = '600 14px "Inter", sans-serif';
+          ctx.font = '600 13px "Outfit", "Plus Jakarta Sans", sans-serif';
           ctx.fillStyle = col;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
@@ -516,38 +516,38 @@ export const KnowledgeCanvas: React.FC<CanvasProps> = ({
         // Constellation level (k >= 0.65) and Star level (k >= 1.1)
         if (k >= 0.65) {
           ctx.font = isSelected
-            ? '600 13px "Inter", sans-serif'
-            : '500 12px "Inter", sans-serif';
+            ? '600 13px "Plus Jakarta Sans", "Outfit", sans-serif'
+            : '500 12px "Plus Jakarta Sans", "Outfit", sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'top';
 
           // Background pill for label contrast
           const labelText = node.label;
           const textMetrics = ctx.measureText(labelText);
-          const bgPadding = 4;
+          const bgPadding = 5;
           const bgW = textMetrics.width + bgPadding * 2;
-          const bgH = 16;
+          const bgH = 17;
           const labelY = y + baseRadius + 6;
 
-          ctx.fillStyle = isDark ? 'rgba(11, 13, 20, 0.85)' : 'rgba(255, 255, 255, 0.85)';
+          ctx.fillStyle = isDark ? 'rgba(9, 11, 18, 0.88)' : 'rgba(255, 255, 255, 0.92)';
           ctx.beginPath();
-          ctx.roundRect(x - bgW / 2, labelY - 2, bgW, bgH, 4);
+          ctx.roundRect(x - bgW / 2, labelY - 2, bgW, bgH, 5);
           ctx.fill();
 
           ctx.fillStyle = isSelected
             ? isDark
               ? '#ffffff'
-              : '#0b0d14'
+              : '#07090e'
             : isDark
-            ? '#e8eaf2'
-            : '#1f2430';
+            ? '#eef0f6'
+            : '#181c28';
           ctx.fillText(labelText, x, labelY);
 
-          // Star level (zoomed in): show domain chip
+          // Star level (zoomed in): show domain chip in JetBrains Mono
           if (k >= 1.25) {
-            ctx.font = '500 10px "Inter", sans-serif';
+            ctx.font = '600 9px "JetBrains Mono", monospace';
             ctx.fillStyle = color;
-            ctx.fillText(node.domain.toUpperCase(), x, labelY + 16);
+            ctx.fillText(node.domain.toUpperCase(), x, labelY + 17);
           }
         }
 

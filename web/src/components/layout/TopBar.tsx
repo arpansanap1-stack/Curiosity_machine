@@ -37,27 +37,27 @@ export const TopBar: React.FC = () => {
     .filter(Boolean);
 
   return (
-    <header className="h-14 px-4 glass-panel border-b border-white/10 flex items-center justify-between gap-4 z-30 select-none">
-      {/* Left: Logo & Trail Breadcrumbs */}
-      <div className="flex items-center gap-3 min-w-0">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+    <header className="h-14 px-4 glass-panel border-b border-[var(--border)] flex items-center justify-between gap-4 z-30 select-none">
+      {/* Left: Emblem & Trail Breadcrumbs */}
+      <div className="flex items-center gap-3.5 min-w-0">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-b from-indigo-500 to-indigo-700 flex items-center justify-center shadow-[0_0_16px_rgba(99,102,241,0.35)] border border-indigo-400/30">
             <Sparkles className="w-4 h-4 text-white" />
           </div>
-          <span className="font-bold text-sm tracking-tight text-white hidden sm:inline">
+          <span className="font-display font-bold text-sm tracking-tight text-[var(--text-primary)] hidden sm:inline">
             Curiosity Machine
           </span>
         </div>
 
         {/* Trail Breadcrumbs */}
         {recentTrailNodes.length > 0 && (
-          <div className="hidden md:flex items-center gap-1.5 text-xs text-gray-400 pl-3 border-l border-white/10 truncate">
+          <div className="hidden md:flex items-center gap-1.5 text-xs text-[var(--text-muted)] pl-3.5 border-l border-[var(--border)] truncate">
             {recentTrailNodes.map((n, i) => (
               <React.Fragment key={n!.id}>
-                {i > 0 && <span className="text-gray-600">/</span>}
+                {i > 0 && <span className="opacity-40">/</span>}
                 <button
                   onClick={() => selectNode(n!.id)}
-                  className="hover:text-indigo-300 transition-colors truncate max-w-[120px]"
+                  className="hover:text-indigo-400 transition-colors truncate max-w-[120px] font-medium"
                 >
                   {n!.label}
                 </button>
@@ -71,28 +71,28 @@ export const TopBar: React.FC = () => {
       <div className="flex-1 max-w-md mx-2">
         <button
           onClick={() => setCommandPaletteOpen(true)}
-          className="w-full h-8 px-3 rounded-lg bg-white/5 border border-white/10 hover:border-white/20 text-xs text-gray-400 flex items-center justify-between transition-colors group"
+          className="btn-tactile w-full h-8.5 px-3 rounded-xl bg-[var(--surface-elevated)]/60 border border-[var(--border)] hover:border-[var(--border-hover)] text-xs text-[var(--text-muted)] flex items-center justify-between transition-all group shadow-inner"
         >
-          <div className="flex items-center gap-2 truncate">
-            <Search className="w-3.5 h-3.5 text-gray-400 group-hover:text-white" />
+          <div className="flex items-center gap-2.5 truncate">
+            <Search className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-indigo-400 transition-colors" />
             <span className="truncate">Search universe or jump to concept…</span>
           </div>
-          <kbd className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono bg-white/10 text-gray-300">
+          <kbd className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono-numbers bg-white/10 text-[var(--text-muted)] border border-white/5">
             Ctrl+K
           </kbd>
         </button>
       </div>
 
       {/* Right: Controls & Toggles */}
-      <div className="flex items-center gap-1 sm:gap-2">
+      <div className="flex items-center gap-1 sm:gap-1.5">
         {/* Degraded mode indicator */}
         {isDegraded && (
           <div
             title="Running in Wikipedia grounding mode (offline / quota degraded)"
-            className="flex items-center gap-1 px-2 py-1 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-400 text-[11px] font-medium"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[11px] font-medium"
           >
-            <AlertCircle className="w-3 h-3" />
-            <span className="hidden lg:inline">Degraded Mode</span>
+            <AlertCircle className="w-3 h-3 shrink-0" />
+            <span className="hidden lg:inline">Encyclopedia Mode</span>
           </div>
         )}
 
@@ -100,10 +100,10 @@ export const TopBar: React.FC = () => {
         <button
           onClick={() => setAccessibleListView(!isAccessibleListView)}
           title={isAccessibleListView ? 'Switch to Canvas View' : 'Switch to Accessible List View'}
-          className={`p-2 rounded-lg text-xs font-medium transition-colors ${
+          className={`btn-tactile p-2 rounded-xl text-xs font-medium transition-all ${
             isAccessibleListView
-              ? 'bg-indigo-600 text-white'
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
+              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+              : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5'
           }`}
         >
           <List className="w-4 h-4" />
@@ -113,10 +113,10 @@ export const TopBar: React.FC = () => {
         <button
           onClick={toggleSound}
           title={soundEnabled ? 'Ambient Audio On' : 'Ambient Audio Off (Default)'}
-          className={`p-2 rounded-lg text-xs font-medium transition-colors ${
+          className={`btn-tactile p-2 rounded-xl text-xs font-medium transition-all ${
             soundEnabled
-              ? 'text-indigo-400 bg-indigo-500/10'
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
+              ? 'text-indigo-400 bg-indigo-500/15 border border-indigo-500/30'
+              : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5'
           }`}
         >
           {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
@@ -126,7 +126,7 @@ export const TopBar: React.FC = () => {
         <button
           onClick={toggleTheme}
           title={`Theme: ${isDark ? 'Observatory (Dark)' : 'Atlas (Parchment)'}`}
-          className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+          className="btn-tactile p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all"
         >
           {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </button>
@@ -135,7 +135,7 @@ export const TopBar: React.FC = () => {
         <button
           onClick={() => setShortcutsModalOpen(true)}
           title="Keyboard shortcuts (?)"
-          className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+          className="btn-tactile p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-all"
         >
           <HelpCircle className="w-4 h-4" />
         </button>
